@@ -78,16 +78,21 @@ log_fatal() {
 	exit 1
 }
 
-# Set the log level for the log messages.
+# @description Set the log level. If some message does not have the
+# minimum level, the message is printed out.
+# @arg $1 is a number in [$LOG_DEBUG..$LOG_FATAL]
+# @return 0 on success.
+# @return 1 on wrong log level.
 log_set_level() {
 	local new_level="$1"
-	is_number "${new_level}"
+	is_number "${new_level}" || return 1
 	if [ "${new_level}" -lt $LOG_DEBUG ]; then
 		return 1
 	elif [ "${new_level}" -gt $LOG_FATAL ]; then
 		return 1
 	fi
 	LOG_CURRENT="${new_level}"
+	return 0
 }
 
 # Retrieve the level of the log messages

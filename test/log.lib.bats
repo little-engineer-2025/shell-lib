@@ -4,9 +4,12 @@
 # Copyright (c) 2025 Alejandro Visiedo <alejandro.visiedo@gmail.com>
 #
 
-@test "Verify LOG_XXXXXXX constant values" {
+setup() {
+  load "../check.lib.sh"
   load "../log.lib.sh"
+}
 
+@test "Verify LOG_XXXXXXX constant values" {
   [ "${LOG_DEBUG}" == "1" ]
   [ "${LOG_TRACE}" == "2" ]
   [ "${LOG_INFO}" == "3" ]
@@ -19,9 +22,9 @@
 }
 
 @test "log_set_level" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
+  ! log_set_level $(( LOG_DEBUG - 1))
+  ! log_set_level $(( LOG_FATAL + 1))
+  ! log_set_level "abc"
   log_set_level "$LOG_TRACE"
   [ "${LOG_CURRENT}" == "${LOG_TRACE}" ]
   log_set_level "$LOG_INFO"
@@ -29,9 +32,6 @@
 }
 
 @test "log_debug" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_TRACE
   result=$(log_debug "test" 2>&1)
   [ "${result}" == "" ]
@@ -41,9 +41,6 @@
 }
 
 @test "log_trace" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_INFO
   result=$(log_trace "test" 2>&1)
   [ "${result}" == "" ]
@@ -56,9 +53,6 @@
 }
 
 @test "log_info" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_WARNING
   result=$(log_info "test" 2>&1)
   [ "${result}" == "" ]
@@ -71,9 +65,6 @@
 }
 
 @test "log_warning" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_ERROR
   result=$(log_warning "test" 2>&1)
   [ "${result}" == "" ]
@@ -86,9 +77,6 @@
 }
 
 @test "log_error" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_FATAL
   result=$(log_error "test" 2>&1)
   [ "${result}" == "" ]
@@ -101,9 +89,6 @@
 }
 
 @test "log_fatal" {
-  load "../check.lib.sh"
-  load "../log.lib.sh"
-
   log_set_level $LOG_FATAL
   run log_fatal "test" 2>&1
   [ "${status}" -eq 1 ]

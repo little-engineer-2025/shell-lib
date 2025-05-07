@@ -1,0 +1,71 @@
+# see: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+---
+name: Bug Report
+description: File a bug report
+title: "[bug] "
+labels: ["bug", "triage"]
+# projects: ["project1", "project2"]
+assignees:
+  - avisiedo
+  - little-engineer-2025
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: title
+    attributes:
+      label: title
+      placeholder: short title for the bug
+    validations:
+      required: true
+  - type: textarea
+    id: steps-replay
+    attributes:
+      label: Steps to replay it
+      placeholder: |
+        It is appreciated a unit test snippet which replay the scenario.
+        Else a sequence to replay it in natural language.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      placeholder: Describe what is the expected result
+    validations:
+      required: true
+  - type: textarea
+    id: current-result
+    attributes:
+      label: Current result
+      placeholder: |
+        Describe what would be considered the right result or behavior
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        You are almost done! now just a few more information
+  - type: dropdown
+    id: system
+    attributes:
+      label: Host System
+      multiple: true
+      options:
+        - Fedora
+        - Ubuntu
+        - Debian
+        - Rocky
+        - MacOS
+        - FreeBSD
+        - NetBSD
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](#).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

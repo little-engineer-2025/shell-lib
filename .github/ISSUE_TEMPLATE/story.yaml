@@ -1,0 +1,45 @@
+# see: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+---
+name: User Story
+description: Provide a user story which describe a use case to request a feature
+title: "[story] "
+labels: ["story", "triage"]
+# projects: ["project1", "project2"]
+assignees:
+  - avisiedo
+  - little-engineer-2025
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill this user story
+  - type: textarea
+    id: title
+    attributes:
+      label: title
+      placeholder: |
+        As a <role> I want <use case> that fit with:
+          - Acceptance criteria 1
+          - Acceptance criteria 2
+          - Acceptance criteria 3
+        ---
+        NOTE: Think about the acceptance criteria as how could be checked the
+        change, so it will drive how the tests will be created.
+      value: |
+        As a <role> I want <use case> that fit with:
+          - Acceptance criteria 1
+          - Acceptance criteria 2
+          - Acceptance criteria 3
+        ---
+        NOTE: Think about the acceptance criteria as how could be checked the
+        change, so it will drive how the tests will be created.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](#).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

@@ -1,0 +1,33 @@
+# see: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+---
+name: Question
+description: Raise a question to the repository owner
+title: "[question] "
+labels: ["question", "triage"]
+# projects: ["project1", "project2"]
+assignees:
+  - avisiedo
+  - little-engineer-2025
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to make your question
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      placeholder: |
+        Use this place to make your question.
+        Describe the context of your question for a better
+        understanding and provide the most valueable response.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](#).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

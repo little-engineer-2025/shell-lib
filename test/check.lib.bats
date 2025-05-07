@@ -55,7 +55,8 @@
 @test "is_fqdn" {
   load "../check.lib.sh"
 
-  is_fqdn "example.com"
+  is_fqdn "alpha.example.com"
+  ! is_fqdn "example.com"
   ! is_fqdn "example"
   ! is_fqdn "9example.com"
 }
@@ -66,16 +67,9 @@
   is_domain "example.com"
   is_domain "example-1.com"
   is_domain "e9xample.com"
+  ! is_domain "com"
+  ! is_domain ".com"
   ! is_domain "-example.com"
   ! is_domain "9example.com"
-}
-
-@test "is_hostname" {
-  load "../check.lib.sh"
-
-  is_hostname "alpha.example.com"
-  is_hostname "alpha1.example.com"
-  is_hostname "alpha-beta.example.com"
-  ! is_hostname "1alpha.example.com"
 }
 

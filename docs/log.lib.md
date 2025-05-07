@@ -15,6 +15,7 @@ is printed out only if the minimum LOG_DEBUG level is active.
 * [log_warning](#logwarning)
 * [log_error](#logerror)
 * [log_fatal](#logfatal)
+* [log_set_level](#logsetlevel)
 
 ### log_debug
 
@@ -73,4 +74,13 @@ The message is printed out only if the minimum LOG_FATAL level is active.
 #### Exit codes
 
 * 1
+
+### log_set_level
+
+Set the log level. If some message does not have the
+minimum level, the message is printed out.
+
+#### Arguments
+
+* **$1** (is): a number in [$LOG_DEBUG..$LOG_FATAL]
 

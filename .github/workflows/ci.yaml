@@ -1,17 +1,28 @@
 # https://docs.github.com/en/actions/writing-workflows/quickstart
+# https://github.com/actions/starter-workflows/tree/main/ci
 ---
 name: Continuous Integration Workflow
 run-name: ${{ github.actor }} triggered CI
 on:
-  - push
-  - pull_request:
-      branches:
-        - main
+  push:
+  pull_request:
+    branches: [ $default_branch ]
+  workflow_dispatch:
+
 jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get install shformat shellcheck bats shdoc
-      - run: make all
+      - run: |
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install shfmt shellcheck bats gawk make
+
+          # Installing shdoc tool
+          mkdir .bin
+          curl -o .bin/shdoc "https://raw.githubusercontent.com/reconquest/shdoc/refs/heads/master/shdoc"
+          chmod +x .bin/shdoc
+          export PATH="$PWD/.bin:$PATH"
+      - run: |
+          export PATH="$PWD/.bin:$PATH"
+          make all
 

@@ -21,5 +21,6 @@ test:  ## Run the unit tests
 
 .PHONY: doc
 doc:  ## Generate documentation from shell comments
-	shdoc
+	shdoc < log.lib.sh > docs/log.lib.md
+	shdoc < check.lib.sh > docs/check.lib.md
 

@@ -74,12 +74,21 @@ get_shell_file_path() {
 }
 
 download() {
-    local remote_url
-    local target_path
-    local temp_path
+    local current_source="$1"
+    local version="$2"
+    local file_path="$3"
+    local ret
     temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
-	curl -s "${remote_url}" -o "${target_path}" || return $?
-    mv "${temp_path}" "${target_path}" || return $?
+    git archive "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
+        ret=$?
+        rm -f "${temp_path}"
+        log_fatal "git archive exit-code=${ret}"
+    }
+    mv "${temp_path}" "${target_path}" || {
+        ret=$?
+        rm -f "${temp_path}"
+        log_fatal "mv exit-code=${ret}"
+    }
     rm -f "${temp_path}"
     return 0
 }
@@ -131,12 +140,9 @@ main() {
 		[ "${version}" != "" ] || version="${default_branch}"
 		file_path="$(get_shell_file_path "${item}")"
 		filename="$(get_shell_filename "${item}")"
-		# TODO Complete the pattern
-		remote_url="${current_source}/.../${file_path}"
 		target_path="${shell_lib_dir}/${filename}"
-        download "${remote_url}" "${target_path}" || {
-			printf "fatal: retrieving from '%s' or writing to '%s'\n" "${remote_url}" "${target_path}"
-			return 1
+        download "${current_source}" "${version}" "${file_path}" || {
+            log_fatal "retrieving current_source='${current_source}' version='${version}' file_path='${file_path}'"
         }
 	done
 

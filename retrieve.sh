@@ -82,7 +82,7 @@ download() {
     git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
         ret=$?
         rm -f "${temp_path}"
-        echo error: git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" >&3
+        echo error: git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" >&2
         return $ret
     }
     mv "${temp_path}" "${target_path}" || {

@@ -9,18 +9,25 @@ repeat over and over again similar code.
 - [check.lib.sh](docs/check.lib.md) provides common functions for check
   strings, useful for validating input reads from the user.
 
-TODO:
+## Using on your repository
 
-- Provide a simple way to install the scripts in your
-  environment. For instance a `dependencies.sh` which
-  provide information about sources where to retrieve
-  lib shells and copy them to your `lib/` directory.
-  (I don't want to call it a package manager).
-  - The references about the version to install will
-    align the git repository in an easy way (tags or main branch).
-  - Add support to retrieve lib shells from different
-    repositories, providing a way to combine from
-    different sources.
+- Create `dependencies.sh` file with the content:
+
+```sh
+dependencies=()
+dependencies+=(github.com/little-engineer-2025/shell-lib)
+dependencies+=(check.lib.sh log.lib.sh text.lib.sh)
+# dependencies+=(check.lib.sh@main log.lib.sh@main text.lib.sh@main)
+# dependencies+=(check.lib.sh@1.0.0 log.lib.sh@1.0.0 text.lib.sh@1.0.0)
+SHELL_LIB_DIR="${PWD}/lib"
+```
+
+- Retrieve the dependencies by:
+
+```sh
+bash <(curl -s https://raw.githubusercontent.com/little-engineer-2025/shell-lib/refs/heads/main/retrieve.sh)
+```
+
 
 ## Getting started
 

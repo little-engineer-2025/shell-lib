@@ -24,4 +24,5 @@ doc:  ## Generate documentation from shell comments
 	shdoc < log.lib.sh > docs/log.lib.md
 	shdoc < check.lib.sh > docs/check.lib.md
 	shdoc < text.lib.sh > docs/text.lib.md
+	shdoc < retrieve.sh > docs/retrieve.md
 

@@ -79,7 +79,7 @@ download() {
     local file_path="$3"
     local ret
     temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
-    git archive "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
+    git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
         ret=$?
         rm -f "${temp_path}"
         printf "error: git archive exit-code=%d\n" "${ret}" >&2
@@ -112,7 +112,7 @@ main() {
 	local dependencies=()
 
 	[ -e "${deps_file}" ] || {
-		printf "fatal: 'dependencies.sh' not found\n" >&2
+		printf "error: 'dependencies.sh' not found\n" >&2
 		return 1
 	}
 	# shellcheck disable=SC1090
@@ -133,7 +133,7 @@ main() {
 
 		# Check a source is selected
 		[ "${current_source}" != "" ] || {
-			printf "fatal: no repository source was specified before trying to retrieve '%s'\n" "${item}"
+			printf "error: no repository source was specified before trying to retrieve '%s'\n" "${item}"
 			return 1
 		}
 		local version=""

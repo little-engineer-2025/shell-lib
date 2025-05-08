@@ -76,7 +76,8 @@ get_shell_file_path() {
 download() {
     local remote_url
     local target_path
-    local temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
+    local temp_path
+    temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
 	curl -s "${remote_url}" -o "${target_path}" || return $?
     mv "${temp_path}" "${target_path}" || return $?
     rm -f "${temp_path}"

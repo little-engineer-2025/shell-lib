@@ -106,7 +106,6 @@ main() {
 	local version=""
 	local filename=""
 	local file_path=""
-	local remote_url=""
 	local target_path=""
 	local dependencies=()
 

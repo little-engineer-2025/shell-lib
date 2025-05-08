@@ -82,13 +82,13 @@ download() {
     git archive "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
         ret=$?
         rm -f "${temp_path}"
-        log_error "git archive exit-code=${ret}"
+        printf "error: git archive exit-code=%d\n" "${ret}" >&2
         return $ret
     }
     mv "${temp_path}" "${target_path}" || {
         ret=$?
         rm -f "${temp_path}"
-        log_error "mv exit-code=${ret}"
+        printf "error: mv exit-code=%d\n" "${ret}" >&2
         return $ret
     }
     rm -f "${temp_path}" || return $?
@@ -143,7 +143,7 @@ main() {
 		filename="$(get_shell_filename "${item}")"
 		target_path="${shell_lib_dir}/${filename}"
         download "${current_source}" "${version}" "${file_path}" || {
-            log_fatal "retrieving current_source='${current_source}' version='${version}' file_path='${file_path}'"
+            printf "error: retrieving current_source='%s' version='%s' file_path='%s'\n" "${current_source}" "${version}" "${file_path}"
         }
 	done
 

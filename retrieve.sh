@@ -73,6 +73,16 @@ get_shell_file_path() {
     printf "%s" "${value}"
 }
 
+download() {
+    local remote_url
+    local target_path
+    local temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
+	curl -s "${remote_url}" -o "${target_path}" || return $?
+    mv "${temp_path}" "${target_path}" || return $?
+    rm -f "${temp_path}"
+    return 0
+}
+
 # @brief main process to retrieve shell libs and copy them
 # to your lib/ directory by default.
 # @return 0 on success
@@ -123,10 +133,10 @@ main() {
 		# TODO Complete the pattern
 		remote_url="${current_source}/.../${file_path}"
 		target_path="${shell_lib_dir}/${filename}"
-		curl -s "${remote_url}" -o "${target_path}" || {
+        download "${remote_url}" "${target_path}" || {
 			printf "fatal: retrieving from '%s' or writing to '%s'\n" "${remote_url}" "${target_path}"
 			return 1
-		}
+        }
 	done
 
 	return 0

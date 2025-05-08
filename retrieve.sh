@@ -82,14 +82,16 @@ download() {
     git archive "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
         ret=$?
         rm -f "${temp_path}"
-        log_fatal "git archive exit-code=${ret}"
+        log_error "git archive exit-code=${ret}"
+        return $ret
     }
     mv "${temp_path}" "${target_path}" || {
         ret=$?
         rm -f "${temp_path}"
-        log_fatal "mv exit-code=${ret}"
+        log_error "mv exit-code=${ret}"
+        return $ret
     }
-    rm -f "${temp_path}"
+    rm -f "${temp_path}" || return $?
     return 0
 }
 

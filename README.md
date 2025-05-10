@@ -56,9 +56,9 @@ https://github.com/little-engineer-2025/toolbox-sh
 
 ## Contributing
 
-See: docs/CONTRIBUTING.md
+See: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## Security
 
-See: docs/SECURITY.md
+See: [docs/SECURITY.md](docs/SECURITY.md)
 

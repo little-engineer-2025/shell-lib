@@ -1,5 +1,8 @@
 #!/bin/bash
 #
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 Alejandro Visiedo <alejandro.visiedo@gmail.com>
+#
 # @file retrieve.sh
 # @brief helper script to install required shell scripts
 # @example curl "https://github.com/..../retrieve.sh" | bash -

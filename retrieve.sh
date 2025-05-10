@@ -11,6 +11,7 @@
 # source is used, that should be indicated in the array to
 # change the source repository. For instance, below can be
 # seen a definition:
+#
 # ```sh
 # dependencies=()
 # # Set initial source to github.com/little-engineer-2025/shell-lib
@@ -23,17 +24,29 @@
 # # but we can indicate the branch or tag version by:
 # dependencies+=(test.lib.sh@v1.0.0)
 # ```
+#
+# Finally we invoke for our repository the below to retrieve the
+# shell lib dependencies:
+#
+# ```sh
+# bash <(curl -s https://raw.githubusercontent.com/little-engineer-2025/shell-lib/refs/heads/main/retrieve.sh)
+# ```
 
-# @brief check if the argument is a repository source
-# @arg $1 string with the repository source "github.com/little-engineer-2025/shell-lib"
 is_repository() {
 	local item="$1"
 	[[ "${item}" =~ ^(github\.com)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)$ ]]
 }
 
-# @brief get the version of a dependency item; if no version
-# is found then the output is an empty string.
-# @stdout receive the string output of the version
+is_source_github() {
+	local item="$1"
+	[[ "${item}" =~ ^(github\.com)(/.*)?$ ]]
+}
+
+is_source_gitlab() {
+	local item="$1"
+	[[ "${item}" =~ ^(gitlab\.com)(/.*)?$ ]]
+}
+
 get_version() {
 	local version="$1"
 	version="${version##*@}"
@@ -44,9 +57,6 @@ get_version() {
 	fi
 }
 
-# @brief retrieve the default branch for a given remote repo
-# @arg $1 the repository source in the form "hostname/user/repo-name"
-# @stdout receive the name of the figured out default branch
 retrieve_default_branch_for_remote_repo() {
 	local repo="$1"
 	local remote_default_branch="main"
@@ -54,45 +64,71 @@ retrieve_default_branch_for_remote_repo() {
 	printf "%s" "${remote_default_branch}"
 }
 
-# @brief retrieve the shell filename without version and directories.
-# @arg $1 the shell reference indicated into the dependencies.
-# @stdout the string with the expected format.
 get_shell_filename() {
-    local value="$1"
-    value="${value%@*}"
-    value="${value##*/}"
-    printf "%s" "${value}"
+	local value="$1"
+	value="${value%@*}"
+	value="${value##*/}"
+	printf "%s" "${value}"
 }
 
-# @brief retrieve the shell file path without version.
-# @arg $1 the shell reference indicated into the dependencies.
-# @stdout the string with the expected format.
 get_shell_file_path() {
-    local value="$1"
-    value="${value%@*}"
-    printf "%s" "${value}"
+	local value="$1"
+	value="${value%@*}"
+	printf "%s" "${value}"
+}
+
+is_empty() {
+	[ -z "$1" ]
 }
 
 download() {
-    local current_source="$1"
-    local version="$2"
-    local file_path="$3"
-    local ret
-    temp_path="$(mktemp /tmp/retrieve.XXXXXXX)"
-    git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" || {
-        ret=$?
-        rm -f "${temp_path}"
-        echo error: git archive --remote "https://${current_source}.git" "${version}" "${file_path}" -o "${temp_path}" >&2
-        return $ret
-    }
-    mv "${temp_path}" "${target_path}" || {
-        ret=$?
-        rm -f "${temp_path}"
-        printf "error: mv exit-code=%d\n" "${ret}" >&2
-        return $ret
-    }
-    rm -f "${temp_path}" || return $?
-    return 0
+	local current_source="$1"
+	local version="$2"
+	local file_path="$3"
+	local target_path="$4"
+	local ret
+	local repo=""
+	local TERM_RM="rm"
+	# TERM_RM="echo rm"
+
+	! is_empty "${current_source}" || {
+		printf "error: current_source='%s'\n" "${current_source}" >&2
+		return 1
+	}
+	! is_empty "${version}" || {
+		printf "error: version='%s'\n" "${version}" >&2
+		return 1
+	}
+	! is_empty "${file_path}" || {
+		printf "error: file_path='%s'\n" "${file_path}" >&2
+		return 1
+	}
+	! is_empty "${target_path}" || {
+		printf "error: target_path='%s'\n" "${target_path}" >&2
+		return 1
+	}
+
+	repo="${current_source%%*/}"
+	temp_path="$(mktemp -d /tmp/retrieve.XXXXXXX)"
+	git clone --branch "${version}" --depth 1 "https://${current_source}.git" "${temp_path}/" &>/dev/null || {
+		ret=$?
+		${TERM_RM} -rf "${temp_path}"
+		printf "error: cloning 'https://%s.git'\n" "${current_source}" >&2
+		return $ret
+	}
+	cp -vf "${temp_path}/${file_path}" "${target_path}" &>/dev/null || {
+		ret=$?
+		${TERM_RM} -rf "${temp_path}"
+		printf "error: copying '%s' to '%s'\n" "${temp_path}/${file_path}" "${target_path}" >&2
+		return $ret
+	}
+	rm -rf "${temp_path}" &>/dev/null || {
+		ret=$?
+		${TERM_RM} -rf "${temp_path}"
+		printf "error: removing '%s'\n" "${temp_path}" >&2
+		return $ret
+	}
+	return 0
 }
 
 # @brief main process to retrieve shell libs and copy them
@@ -128,6 +164,7 @@ main() {
 		if is_repository "${item}"; then
 			current_source="${item}"
 			default_branch="$(retrieve_default_branch_for_remote_repo "${current_source}")"
+			printf "info: current_source='%s'\n" "${current_source}" >&2
 			continue
 		fi
 
@@ -142,9 +179,11 @@ main() {
 		file_path="$(get_shell_file_path "${item}")"
 		filename="$(get_shell_filename "${item}")"
 		target_path="${shell_lib_dir}/${filename}"
-        download "${current_source}" "${version}" "${file_path}" || {
-            printf "error: retrieving current_source='%s' version='%s' file_path='%s'\n" "${current_source}" "${version}" "${file_path}"
-        }
+		printf "info: downloading '%s' from '%s'\n" "${item}" "${current_source}" >&2
+		download "${current_source}" "${version}" "${file_path}" "${target_path}" || {
+			printf "error: retrieving current_source='%s' version='%s' file_path='%s' target_path='%s'\n" "${current_source}" "${version}" "${file_path}" "${target_path}"
+			return 1
+		}
 	done
 
 	return 0

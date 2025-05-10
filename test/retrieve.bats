@@ -9,6 +9,18 @@ setup() {
     ! is_repository "github.com/little-engineer-2025/shell-lib/blob"
 }
 
+@test "is_source_github" {
+    is_source_github "github.com/little-engineer-2025/shell-lib"
+    is_source_github "github.com"
+    ! is_source_github "gitlab.com"
+}
+
+@test "is_source_gitlab" {
+    is_source_gitlab "gitlab.com/little-engineer-2025/shell-lib"
+    is_source_gitlab "gitlab.com"
+    ! is_source_gitlab "github.com"
+}
+
 @test "get_version" {
     [ "$(get_version "check.lib.sh")" == "" ]
     [ "$(get_version "check.lib.sh@main")" == "main" ]
@@ -20,6 +32,13 @@ setup() {
     [ "$(retrieve_default_branch_for_remote_repo "github.com/reujab/silver")" == "master" ]
 }
 
+@test "get_shell_filename" {
+    [ "$(get_shell_filename "lib/check.lib.sh@main")" == "check.lib.sh" ]
+    [ "$(get_shell_filename "lib/check.lib.sh")" == "check.lib.sh" ]
+    [ "$(get_shell_filename "check.lib.sh@main")" == "check.lib.sh" ]
+    [ "$(get_shell_filename "check.lib.sh")" == "check.lib.sh" ]
+}
+
 @test "get_shell_file_path" {
     [ "$(get_shell_file_path "lib/check.lib.sh")" == "lib/check.lib.sh" ]
     [ "$(get_shell_file_path "lib/check.lib.sh@main")" == "lib/check.lib.sh" ]
@@ -27,10 +46,11 @@ setup() {
     [ "$(get_shell_file_path "check.lib.sh@main")" == "check.lib.sh" ]
 }
 
-@test "get_shell_filename" {
-    [ "$(get_shell_filename "lib/check.lib.sh@main")" == "check.lib.sh" ]
-    [ "$(get_shell_filename "lib/check.lib.sh")" == "check.lib.sh" ]
-    [ "$(get_shell_filename "check.lib.sh@main")" == "check.lib.sh" ]
-    [ "$(get_shell_filename "check.lib.sh")" == "check.lib.sh" ]
+@test "is_empty" {
+    is_empty ""
+    is_empty
+    ! is_empty "a"
+    ! is_empty "_"
+    ! is_empty "9"
 }
 

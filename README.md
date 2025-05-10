@@ -8,6 +8,7 @@ repeat over and over again similar code.
   with a common format from your shell scripts. deps: `check.lib.sh`
 - [check.lib.sh](docs/check.lib.md) provides common functions for check
   strings, useful for validating input reads from the user.
+- [text.lib.sh](docs/text.lib.md) provide text string helpers.
 
 ## Using on your repository
 

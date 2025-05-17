@@ -1,6 +1,6 @@
 # text.lib.sh
 
-Trim right spaces from the string.
+Check if the string ends with a specific string.
 
 ## Index
 
@@ -9,6 +9,8 @@ Trim right spaces from the string.
 * [trim](#trim)
 * [ltrim](#ltrim)
 * [rtrim](#rtrim)
+* [begins_with](#beginswith)
+* [ends_with](#endswith)
 
 ### uppercase
 
@@ -59,4 +61,16 @@ Trim right spaces from the string.
 #### Output on stdout
 
 * The resulting right trimmed string.
+
+### begins_with
+
+#### Arguments
+
+* **$1** (the): prefix to check.
+
+### ends_with
+
+#### Arguments
+
+* **$1** (the): suffix to check.
 

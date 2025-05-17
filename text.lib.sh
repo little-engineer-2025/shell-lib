@@ -63,3 +63,23 @@ rtrim() {
 	value="${value%"${value##*[![:space:]]}"}"
 	printf "%s" "${value}"
 }
+
+# @brief Check if the string begins with a specific string.
+# @arg $1 the string to check at.
+# @arg $1 the prefix to check.
+# @return 0 if the strings begin with prefix, else 1
+begins_with() {
+	local value="$1"
+	local prefix="$2"
+	[ "${prefix}" == "" ] || [ "${value}" != "${value#"${prefix}"}" ]
+}
+
+# @brief Check if the string ends with a specific string.
+# @arg $1 the string to check at.
+# @arg $1 the suffix to check.
+# @return 0 if the string ends with the suffix, else 1
+ends_with() {
+	local value="$1"
+	local suffix="$2"
+	[ "${suffix}" == "" ] || [ "${value}" != "${value%"${suffix}"}" ]
+}

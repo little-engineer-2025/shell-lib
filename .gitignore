@@ -1,3 +1,27 @@
-.env
-.envrc
+# Ignore by default
+**/*
+
+# Add ..github contents
+!.github
+!.github/**
+!.github/**/*
+
+# Add documentation
+!README.md
+!LICENSE
+!docs
+!docs/**
+!docs/**/*
+
+# Source code
+!Makefile
+*.sh
+
+# Tests
+test
+test/**
+test/**/*
+
+# Miscelanea
+!CODEOWNERS
 
